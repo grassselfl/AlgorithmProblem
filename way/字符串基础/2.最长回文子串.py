@@ -23,7 +23,7 @@ https://leetcode.cn/problems/longest-palindromic-substring/
 """
 
 
-class Solution:
+class Solution1:
 
     def __init__(self):
         self.data = "zcdsfsaaadaaabf"
@@ -45,9 +45,54 @@ class Solution:
         print(result, len(result))
 
 
-Solution()()
+Solution1()()
 
 """
 整除
 python for range前闭后开、切片也是前闭后开
 """
+
+
+class Solution2:
+
+    def __init__(self):
+        self.data = "zcdsfsaaadaaabm"
+
+    def longest_palindrome(self, s: str) -> str:
+        # 1.分解子问题，写状态转移方程
+        # 2.赋初值
+        # 3.开dp
+        # 4.找边界条件
+
+        if not s:
+            return ""
+
+        start = 0 # 记录字符串起始位置
+        max_length = 0 # 记录回文串最大长度
+        dp = [[False for _ in range(len(s))] for _ in range(len(s))]
+
+        # 初始化 赋初值很重要
+        for i in range(len(s)):
+            dp[i][i] = True
+            if i < len(s) - 1 and s[i] == s[i + 1]:
+                dp[i][i+2] = True
+                max_length = 2
+
+        # 以字符串长度为1和2的子串为基础，推导长度：3~len 的子串的dp
+        for i in range(3, len(s)):
+            # // 从头开始，遍历长度为i的子串，并判断它们是否为回文串
+            for j in range(len(s) - i):
+                k = j + i - 1
+                if dp[j+1][k-1] == True and s[j] == s[k]:
+                    dp[j][k] = True
+                    max_length = i
+                    start = i
+
+        return s[start:start+max_length]
+
+    def __call__(self, *args, **kwargs):
+        result = self.longest_palindrome(self.data) or None
+        print(result, len(result))
+
+
+Solution2()()
